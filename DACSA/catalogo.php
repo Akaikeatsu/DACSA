@@ -1,18 +1,17 @@
 <?php 
   include_once("modelo\iniciar_sesion_db.php");
   include_once("modelo\producto.php");
-  include_once("modelo\orden_producto.php");
+  include_once("modelo\orden.php");
   session_start();
   $sErr = "";
   $Usuario=new Usuario();
   $arrProdctos = null;
   $Producto = new Producto();
-  $ListaProductos = new Orden_Producto();
-  $eProducto;
-  $tProducto;
+  $Folio_Orden = "";
  
   if (isset($_SESSION["usu"])){
     $Usuario = $_SESSION["usu"];
+    $pUsuario=$Usuario->getData()->getId();
     try {
       $arrProdctos = $Producto->search_all();
     } catch (Exception $e) {
@@ -21,7 +20,17 @@
     }
   }
   else
-    $sErr = "Debe estar firmado"
+    $sErr = "Debe estar firmado";
+
+	/*$_SESSION["orden"] = null;*/
+
+	if (!isset($_SESSION["orden"]) || $_SESSION["orden"] == null){
+		$_SESSION["orden"] = new Orden();
+		$_SESSION["orden"]->generate_folio();
+		$_SESSION["orden"]->setUsuario($pUsuario);
+		$_SESSION["orden"]->registrar();
+		$Folio_Orden = $_SESSION["orden"]->getFolio();
+	}
  ?>
 
 <?php  include_once("menu.php");  ?><br><br>
@@ -48,6 +57,9 @@
 
     	<article class="row">
       		<div class="col">
+      			<form name="order_table" method="post" action="pedidos_cont.php">
+      			<input type="hidden" name="codigo">
+      			<input type="hidden" name="folio">
         		<table class="table table-bordered table-hover">
           			<thead class="">
             			<tr>
@@ -65,7 +77,11 @@
                   					<td><?php echo $Producto->getNombre(); ?></td>
                   					<td><?php echo $Producto->getPrecio(); ?></td>
                   					<td><?php echo $Producto->getExistencia(); ?></td>
-                  					<td><input type="submit" value="Agregar" class="btn btn-success" onClick="this.disabled=true"></td>
+                  					<td>
+                  						<input type="submit" value="Agregar" class="btn btn-success" 
+                  						onClick="codigo.value = <?php echo $Producto->getCodigo(); ?>;
+                  						folio.value = <?php echo $Folio_Orden ?>">
+                  					</td>
                 				</tr>
 			        <?php
 			              	}
@@ -78,6 +94,7 @@
 			            }
 			         ?>
         		</table>
+        		</form>
       		</div>
     	</article>
   	</section>

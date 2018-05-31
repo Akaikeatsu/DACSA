@@ -104,6 +104,15 @@ class Orden {
 		return $this->Envio;
 	}
 
+	function generate_folio(){
+		$key = '';
+ 		$pattern = '1234567890abcdefghijklmnopqrstuvwxyz';
+ 		$max = strlen($pattern)-1;
+ 		for($i=0;$i < 10;$i++) 
+ 			$key .= $pattern{mt_rand(0,$max)};
+ 		$this->Folio = $key;
+	}
+
 	function find_client_name(){
 	$Connection=new conexion();
     $sQuery="";
@@ -280,6 +289,24 @@ class Orden {
 		}
 		return $nAfectados;
 	}
+
+	function registrar(){
+	    $Connection=new conexion();
+	    $sQuery="";
+	    $nAfectados=-1;
+	      if ($this->Folio == "" OR $this->Usuario == 0)
+	          throw new Exception("Data->registrar_usuario(): faltan datos");
+	      else{
+	        if ($Connection->conectar()){
+	          $sQuery = " INSERT INTO public.venta(folio, usuario) VALUES (
+	                    '".$this->Folio."', ".$this->Usuario.");";
+	          $nAfectados = $Connection->ejecutarComando($sQuery);
+	          $Connection->desconectar();     
+	        }
+	      }
+	    return $nAfectados;
+  }
+
 
 }
 
