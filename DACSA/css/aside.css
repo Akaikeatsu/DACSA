@@ -1,0 +1,13 @@
+.fondo{
+  background:rgba(219, 219, 219, 0.58);
+}
+
+h4,p{
+  font-family: Century Gothic;
+  text-align: center;
+  font-size: 20px;
+}
+
+h4{
+  color:rgb(14, 69, 143);
+}

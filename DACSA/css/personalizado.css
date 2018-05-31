@@ -1,0 +1,63 @@
+.fondoaside{
+  background:rgba(219, 219, 219, 0.58);
+}
+
+.fondoheader{
+background-color:rgba(250, 207, 25, 0.73);
+}
+
+
+.mision,.vision,.valores{
+  text-align: center;
+  font: 25px Century Gothic ;
+  color:rgb(0, 0, 0);
+  font-style: oblique;
+}
+
+.pedido{
+  font: 20px Century Gothic;
+  color:rgb(0, 0, 0);
+}
+
+.title{
+font: 15px Century Gothic;
+color: rgb(255, 255, 255);
+text-align: center;
+}
+
+.titleD{
+font: 30px Century Gothic;
+text-align: center;
+
+color: rgb(255, 255, 255);
+}
+
+.title-perfil{
+  font: 30px Century Gothic;
+color: rgb(0, 0, 0);
+}
+
+.parrafoD{
+  color: rgb(60, 60, 60);
+  font-size: 15px;
+  text-align: center;
+}
+
+.parrafo{
+  color:rgb(255, 255, 255);
+  font-size: 15px;
+  text-align: center;
+}
+
+.pie {
+    clear: both;
+    text-align: center;
+    color:rgb(0,0,0);
+    font:12px Century Gothic;
+}
+
+.sombra{
+  box-shadow: 2px 2px 10px #666;          /* Sombra normal */
+box-shadow: 5px -5px 0 2px #444;        /* Sombra superior sin desenfoque */
+box-shadow: 5px 5px 25px #222 ;    /* Sombra interior */
+}
