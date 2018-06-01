@@ -97,8 +97,15 @@ class Orden {
 		return $this->RFC;
 	}
 
+	function setFactura($pFactura){
+		$this->Factura = $pFactura;
+	}
 	function getFactura(){
 		return $this->Factura;
+	}
+
+	function setEnvio($pEnvio){
+		$this->Envio = $pEnvio;
 	}
 	function getEnvio(){
 		return $this->Envio;
@@ -251,6 +258,52 @@ class Orden {
 		return $arrResultado;
 	}
 
+	function calculate_subtotal(){
+ 	$Connection=new conexion();
+  	$sQuery="";
+  	$Result=null;
+  	$bRet = false;
+  		if ($this->Folio == "")
+  			throw new Exception("Orden->search(): Error, No de ha especificado un Número de Folio");
+  		else{
+  			if ($Connection->conectar()){
+  		 		$sQuery = "SELECT sum(precio_u) as subtotal FROM public.porducto WHERE codigo IN 
+							(SELECT porductocodigo FROM public.porducto_venta WHERE ventafolio = '".$this->Folio."')";
+  				$Result = $Connection->ejecutarConsulta($sQuery);
+  				$Connection->desconectar();
+  				if ($Result){
+  					$this->Subtotal = $Result[0][0];
+  					$bRet = true;
+  				}
+  			} 
+  		}
+		return $bRet;
+	}
+
+	function claculate_values(){
+ 	$Connection=new conexion();
+  	$sQuery="";
+  	$Result=null;
+  	$bRet = false;
+  		if ($this->Folio == "")
+  			throw new Exception("Orden->search(): Error, No de ha especificado un Número de Folio");
+  		else{
+  			if ($Connection->conectar()){
+  		 		$sQuery = "SELECT sum(desc_cant) as sum_desc, sum(ieps_cant) as sum_ieps, sum(iva_cant) as sum_iva, sum(total_cant) as sum_total FROM public.porducto_venta WHERE ventafolio = '".$this->Folio."'";
+  				$Result = $Connection->ejecutarConsulta($sQuery);
+  				$Connection->desconectar();
+  				if ($Result){
+  					$this->Descuento = $Result[0][0];
+  					$this->IEPS = $Result[0][1];
+            		$this->IVA = $Result[0][2];
+            		$this->Monto = $Result[0][3];
+  					$bRet = true;
+  				}
+  			} 
+  		}
+		return $bRet;
+	}
+
 	function delete(){
 		$this->delete_products();
 		$this->delete_orden();
@@ -295,7 +348,7 @@ class Orden {
 	    $sQuery="";
 	    $nAfectados=-1;
 	      if ($this->Folio == "" OR $this->Usuario == 0)
-	          throw new Exception("Data->registrar_usuario(): faltan datos");
+	          throw new Exception("Data->registrar(): faltan datos");
 	      else{
 	        if ($Connection->conectar()){
 	          $sQuery = " INSERT INTO public.venta(folio, usuario) VALUES (
@@ -306,6 +359,31 @@ class Orden {
 	      }
 	    return $nAfectados;
   }
+
+	function confirm_orden(){
+	    $Connection=new conexion();
+	    $sQuery="";
+	    $nAfectados=-1;
+	      if ($this->Folio == "")
+	          throw new Exception("Data->update_user(): faltan datos");
+	      else{
+	        if ($Connection->conectar()){
+	        	$sQuery = "UPDATE public.venta SET 
+	        				subtotal = ".$this->Subtotal.", 
+	        				descuento = ".$this->Descuento.", 
+	        				neto = ".$this->Neto.", 
+	        				ieps_total = ".$this->IEPS.", 
+	        				iva_total = ".$this->IVA.", 
+			        		monto_total = ".$this->Monto.", 
+			        		factura = '".$this->Factura."', 
+			        		envio_dom = '".$this->Envio."'
+							WHERE folio = '".$this->Folio."';";
+	          $nAfectados = $Connection->ejecutarComando($sQuery);
+	          $Connection->desconectar();
+	        }
+	      }
+	      return $nAfectados;
+	}
 
 
 }

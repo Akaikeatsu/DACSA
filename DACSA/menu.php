@@ -25,7 +25,7 @@
 				<div class="collapse navbar-collapse" id="uno">
 					<ul class="navbar-nav">
 						<li class="nav-item"> <a href="catalogo.php" class="nav-link">Cat&aacute;logo</a> </li>
-						<li class="nav-item"> <a href="realizarpedido.php" class="nav-link">Realizar Pedido</a> </li>
+						<li class="nav-item"> <a href="realizarpedido.php" class="nav-link">Ver Pedido</a> </li>
 						<li class="nav-item"> <a href="perfil_usuario.php" class="nav-link">Tu Perfil</a> </li>
 						<li class="nav-item"> <a href="cerrar_sesion.php" class="nav-link">Cerrar Sesi&oacute;n</a> </li>
 					</ul>

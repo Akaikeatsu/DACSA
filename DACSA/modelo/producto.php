@@ -12,12 +12,14 @@ class Producto {
 	private $Existencia=0;
 
 	private $Folio="";
+	private $Cantidad=1;
+	private $Total = 0;
 
 	function setFolio($pFolio){
-		$this->Codigo = $pFolio;
+		$this->Folio = $pFolio;
 	}
 	function getFolio(){
-		return $this->Codigo;
+		return $this->Folio;
 	}
 	
 	function setCodigo($pCodigo){
@@ -75,8 +77,6 @@ class Producto {
 	function getExistencia(){
 		return $this->Existencia;
 	}
-
-	
 
 	function search_all(){
 		$Conection=new conexion();
@@ -137,24 +137,32 @@ class Producto {
 		return $bRet;
 	}
 
-	function add_to_order(){
+	function Funct(){
 		$Connection=new conexion();
 	    $sQuery="";
 	    $nAfectados=-1;
-	      if ($this->Folio == "" OR $this->Codigo == 0)
-	          throw new Exception("Data->registrar_usuario(): faltan datos");
+	      if ($this->Folio == "" OR $this->Codigo == 0){
+	      	  echo "No - ";
+	          throw new Exception("Producto->registrar_usuario(): faltan datos");
+	      }
 	      else{
+	      	$this->Precio = $this->Precio * $this->Cantidad;
+	      	$this->Descuento = $this->Descuento * $this->Cantidad;
+	      	$this->IEPS = $this->IEPS * $this->Cantidad;
+	      	$this->IVA = $this->IVA * $this->Cantidad;
+	      	
+	      	$this->Total=$this->Precio - $this->Descuento;
+	      	$this->Total=$this->Total + $this->IEPS;
+	      	$this->Total=$this->Total + $this->IVA;
 	        if ($Connection->conectar()){
-	          $Total= $this->Precio - $this->Descuento + $this->IEPS + $this->IVA;
-	          $sQuery = "INSERT INTO public.porducto_venta
-	          				(porductocodigo, ventafolio, cantidad, desc_cant, ieps_cant, iva_cant, total_cant)
-						 VALUES (".$this->Codigo.", '".$this->Folio."', 1, ".$this->Descuento.", ".$this->IEPS.", ".$this->IVA.", ".$Total.");";
+	          $sQuery = "INSERT INTO public.porducto_venta(porductocodigo, ventafolio, cantidad, desc_cant, ieps_cant, iva_cant, total_cant) VALUES (".$this->Codigo.", '".$this->Folio."', ".$this->Cantidad.", ".$this->Descuento.", ".$this->IEPS.", ".$this->IVA.", ".$this->Total.");";
 	          $nAfectados = $Connection->ejecutarComando($sQuery);
 	          $Connection->desconectar();     
 	        }
 	      }
 	    return $nAfectados;
 	}
+
 
 }
 

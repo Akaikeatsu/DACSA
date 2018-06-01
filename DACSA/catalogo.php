@@ -1,17 +1,17 @@
 <?php 
   include_once("modelo\iniciar_sesion_db.php");
   include_once("modelo\producto.php");
-  include_once("modelo\orden.php");
+  /*include_once("modelo\orden.php");*/
   session_start();
   $sErr = "";
   $Usuario=new Usuario();
   $arrProdctos = null;
   $Producto = new Producto();
-  $Folio_Orden = "";
+  /*$Folio_Orden = "";*/
  
   if (isset($_SESSION["usu"])){
     $Usuario = $_SESSION["usu"];
-    $pUsuario=$Usuario->getData()->getId();
+    /*$pUsuario=$Usuario->getData()->getId();*/
     try {
       $arrProdctos = $Producto->search_all();
     } catch (Exception $e) {
@@ -24,13 +24,16 @@
 
 	/*$_SESSION["orden"] = null;*/
 
-	if (!isset($_SESSION["orden"]) || $_SESSION["orden"] == null){
+/*	if (!isset($_SESSION["orden"]) || $_SESSION["orden"] == null){
 		$_SESSION["orden"] = new Orden();
 		$_SESSION["orden"]->generate_folio();
 		$_SESSION["orden"]->setUsuario($pUsuario);
 		$_SESSION["orden"]->registrar();
-		$Folio_Orden = $_SESSION["orden"]->getFolio();
 	}
+
+	if (isset($_SESSION["orden"]) && $_SESSION["orden"] != null) {
+		$Folio_Orden = $_SESSION["orden"]->getFolio();
+	}*/
  ?>
 
 <?php  include_once("menu.php");  ?><br><br>
@@ -48,21 +51,23 @@
 	<br>
   	<section class="container-fluid ">
 
-    	<form action="" method="post" class="form-inline ">
+    	<!--<form action="" method="post" class="form-inline ">
       		<input type="text" placeholder="Buscar" class="form-control mr-sm-2">
       		<button class="btn btn-success" type="submit">Buscar</button>
-    	</form>
-    	<br>
-    	<center><h3>Resultados:</h3></center><br>
+    	</form>		
+    	<br>-->
+    	<center><h3>Cat&aacute;logo:</h3></center><br>
+    	<!--<center><h3><?php echo $Folio_Orden; ?></h3></center><br>-->
 
     	<article class="row">
       		<div class="col">
-      			<form name="order_table" method="post" action="pedidos_cont.php">
+      			<form name="order_table" method="get" action="carrito_cont.php">
       			<input type="hidden" name="codigo">
-      			<input type="hidden" name="folio">
+      			<!--<input type="hidden" name="folio" value="<?php echo $Folio_Orden; ?>">-->
         		<table class="table table-bordered table-hover">
           			<thead class="">
             			<tr>
+            				<td>Codigo</td>
               				<td>Producto</td>
               				<td>Precio Total</td>
               				<td>Existencia</td>
@@ -74,13 +79,13 @@
 			              	foreach ($arrProdctos as $Producto) {
 			         ?>
                 				<tr>
+                					<td><?php echo $Producto->getCodigo(); ?></td>
                   					<td><?php echo $Producto->getNombre(); ?></td>
                   					<td><?php echo $Producto->getPrecio(); ?></td>
                   					<td><?php echo $Producto->getExistencia(); ?></td>
                   					<td>
                   						<input type="submit" value="Agregar" class="btn btn-success" 
-                  						onClick="codigo.value = <?php echo $Producto->getCodigo(); ?>;
-                  						folio.value = <?php echo $Folio_Orden ?>">
+                  						onclick="codigo.value=<?php echo $Producto->getCodigo(); ?>">
                   					</td>
                 				</tr>
 			        <?php
