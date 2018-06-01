@@ -63,9 +63,9 @@
                   <td><?php echo $Orden->getDomicilio(); ?></td>
                   <td>
                     <input type="submit" value="Ver Pedido" class="btn btn-success" 
-                    onClick="folio.value=<?php echo $Orden->getFolio(); ?>; operation.value='v'">
+                    onClick="folio.value='<?php echo $Orden->getFolio(); ?>'; operation.value='v'">
                     <input type="submit" value="Elminar Pedido" class="btn btn-danger" 
-                    onClick="folio.value=<?php echo $Orden->getFolio(); ?>; operation.value='e'">
+                    onClick="folio.value='<?php echo $Orden->getFolio(); ?>'; operation.value='e'">
                   </td>
                 </tr>
 <?php
